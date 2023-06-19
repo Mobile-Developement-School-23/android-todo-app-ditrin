@@ -75,14 +75,12 @@ class MainScreenFragment : Fragment(R.layout.fragment_main_screen) {
     private fun setupClickListener() {
         mainScreenAdapter.onTodoClickListener = {
             //переход на экран редактирования
-            Log.d("MainScreenFragment", it.toString())
         }
     }
 
     private fun setupLongClickListener() {
         mainScreenAdapter.onTodoLongClickListener = {
             viewModel.changeCompletedState(it)
-            Log.d("lubrek", it.toString())
         }
     }
 }
