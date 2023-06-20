@@ -23,14 +23,4 @@ class MainActivity : AppCompatActivity() {
             replace(R.id.fragmentContainer, fragment)
             commit()
         }
-
-        //viewModel = ViewModelProvider(this)[MainViewModel::class.java]
-     //   viewModel.todoList.observe(this) {
-           // Log.d("lubrek", it.toString())
-         //   if(count == 0) {
-        //        count++
-     //           val item = it[0]
-     //           viewModel.changeCompletedState(item)
-   //         }
-   //     }
     }
