@@ -1,17 +1,17 @@
 package com.example.todolist.domain
 
-data class TodoItem (
-    var id: String,
+data class TodoItem(
+    val id: String,
     val text: String,
-    var importance:Importance,
-    var deadline: Long?,
-    var isCompleted: Boolean,
-    var createdAt: Long,
-    var modifiedAt: Long?,
-    ){
-    enum class Importance{
-        LOW,
-        COMMON,
-        HIGH,
-    }
+    val importance: Importance,
+    val deadline: Long?,
+    val isCompleted: Boolean,
+    val createdAt: Long,
+    val modifiedAt: Long?,
+)
+
+enum class Importance {
+    LOW,
+    COMMON,
+    HIGH,
 }

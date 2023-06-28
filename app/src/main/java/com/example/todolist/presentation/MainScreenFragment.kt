@@ -35,13 +35,13 @@ class MainScreenFragment : Fragment(R.layout.fragment_main_screen) {
         setupTodoListRecycler(binding.todoList)
         viewModel = ViewModelProvider(this).get(MainScreenViewModel::class.java)
         viewModel.todoList.observe(viewLifecycleOwner) {
-            mainScreenAdapter.todoList = it
+            mainScreenAdapter.submitList(it)
         }
     }
 
     private fun setupTodoListRecycler(rvTodoList: RecyclerView) {
         with(rvTodoList) {
-            mainScreenAdapter = MainScreenAdapter().apply { todoList = todoListTemp }
+            mainScreenAdapter = MainScreenAdapter()
             adapter = mainScreenAdapter
         }
         setupLongClickListener()
@@ -63,7 +63,7 @@ class MainScreenFragment : Fragment(R.layout.fragment_main_screen) {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val item = mainScreenAdapter.todoList[viewHolder.adapterPosition]
+                val item = mainScreenAdapter.currentList[viewHolder.adapterPosition]
                 viewModel.deleteTodoItem(item)
             }
         }

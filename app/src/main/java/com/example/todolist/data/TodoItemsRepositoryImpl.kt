@@ -2,6 +2,7 @@ package com.example.todolist.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.todolist.domain.Importance
 import com.example.todolist.domain.TodoItem
 import com.example.todolist.domain.TodoItemsRepository
 import java.lang.RuntimeException
@@ -22,12 +23,12 @@ object TodoItemsRepositoryImpl : TodoItemsRepository {
 
     override fun addTodoItem(todoItem: TodoItem) {
         if (todoItem.id == null) {
-            todoItem.id = Random.nextInt().toString()
+            todoItem.copy(id = Random.nextInt().toString())
         }
-        todoItem.importance = TodoItem.Importance.COMMON
-        todoItem.deadline = 0
-        todoItem.createdAt = 0
-        todoItem.modifiedAt = null
+        todoItem.copy(importance = Importance.COMMON)
+        todoItem.copy(deadline = 0)
+        todoItem.copy(createdAt = 0)
+        todoItem.copy(modifiedAt = null)
         todoItemsList.add(todoItem)
         updateList()
     }

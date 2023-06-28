@@ -3,7 +3,7 @@ package com.example.todolist.presentation
 import androidx.recyclerview.widget.DiffUtil
 import com.example.todolist.domain.TodoItem
 
-class MainScreenDiffUtil: DiffUtil.ItemCallback<TodoItem>() {
+class MainScreenDiffItemCallback: DiffUtil.ItemCallback<TodoItem>() {
     override fun areItemsTheSame(oldItem: TodoItem, newItem: TodoItem): Boolean {
         return oldItem.id == newItem.id
     }
