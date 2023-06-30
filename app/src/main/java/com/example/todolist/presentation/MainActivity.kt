@@ -7,8 +7,6 @@ import com.example.todolist.R
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: MainScreenViewModel
-    private var count = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -23,4 +21,4 @@ class MainActivity : AppCompatActivity() {
             replace(R.id.fragmentContainer, fragment)
             commit()
         }
-    }
+}

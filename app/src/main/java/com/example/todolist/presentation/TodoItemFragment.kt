@@ -48,13 +48,11 @@ class TodoItemFragment(
         binding.close.setOnClickListener {
             activity?.onBackPressed()
         }
+        binding.save.setOnClickListener {
+
+        }
 
     }
-
-    private fun observeViewModel() {
-
-    }
-
 
     private fun launchRightMode() {
         when (screenMode) {
@@ -67,7 +65,10 @@ class TodoItemFragment(
         viewModel.getTodoItemId(id)
         viewModel.todoItem.observe(viewLifecycleOwner) {
             etText.setText(it.text)
-
+            it.deadline?.let { it1 ->
+                viewModel.editTodoItem(it.text,
+                    it1, it.importance, it.createdAt)
+            }
         }
     }
 
@@ -140,6 +141,4 @@ class TodoItemFragment(
             }
         }
     }
-
-
 }

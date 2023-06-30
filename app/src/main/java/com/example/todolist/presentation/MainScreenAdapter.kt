@@ -36,8 +36,9 @@ class MainScreenAdapter :
     }
 
     override fun onBindViewHolder(holder: MainScreenViewHolder, position: Int) {
-        //  holder.bind(todoList[position])
+        holder.bind(getItem(position))
         val todoItem = getItem(position)
+
         holder.view.setOnLongClickListener {
             onTodoLongClickListener?.invoke(todoItem)
             true
@@ -53,7 +54,6 @@ class MainScreenAdapter :
         const val VIEW_TYPE_COMPLETED = 0
         const val VIEW_TYPE_NOT_COMPLETED = 1
     }
-
 
     fun setOnClickListener(listener: (TodoItem) -> Unit) {
         onTodoClickListener = listener

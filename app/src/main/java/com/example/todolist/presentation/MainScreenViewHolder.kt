@@ -20,6 +20,6 @@ class MainScreenViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         else if (todoItem.importance == Importance.HIGH){
             importance.setImageResource(R.drawable.importance_high)
         }
-        else importance.setImageResource(R.drawable.importance_common)
+        else importance.setImageDrawable(null)
     }
 }

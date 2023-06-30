@@ -61,7 +61,7 @@ val todoListTemp = mutableListOf(
     TodoItem(
         id = "7",
         text = "дела делишки",
-        importance = Importance.HIGH,
+        importance = Importance.COMMON,
         deadline = 0,
         isCompleted = true,
         createdAt = 0,
@@ -70,7 +70,7 @@ val todoListTemp = mutableListOf(
     TodoItem(
         id = "8",
         text = "дела делишки",
-        importance = Importance.HIGH,
+        importance = Importance.COMMON,
         deadline = 0,
         isCompleted = true,
         createdAt = 0,
@@ -79,7 +79,7 @@ val todoListTemp = mutableListOf(
     TodoItem(
         id = "9",
         text = "дела делишки",
-        importance = Importance.HIGH,
+        importance = Importance.COMMON,
         deadline = 0,
         isCompleted = true,
         createdAt = 0,
@@ -88,7 +88,7 @@ val todoListTemp = mutableListOf(
     TodoItem(
         id = "10",
         text = "дела делишки",
-        importance = Importance.HIGH,
+        importance = Importance.COMMON,
         deadline = 0,
         isCompleted = true,
         createdAt = 0,
@@ -97,7 +97,7 @@ val todoListTemp = mutableListOf(
     TodoItem(
         id = "11",
         text = "Очень важное дело на выполнение которого ушло очень много врмени и сил и которое по трудозатратам не окупились и никогда не окупиться",
-        importance = Importance.HIGH,
+        importance = Importance.COMMON,
         deadline = 0,
         isCompleted = false,
         createdAt = 0,
@@ -106,7 +106,7 @@ val todoListTemp = mutableListOf(
     TodoItem(
         id = "12",
         text = "Очень важное дело на выполнение которого ушло очень много врмени и сил и которое по трудозатратам не окупились и никогда не окупиться",
-        importance = Importance.HIGH,
+        importance = Importance.COMMON,
         deadline = 0,
         isCompleted = false,
         createdAt = 0,

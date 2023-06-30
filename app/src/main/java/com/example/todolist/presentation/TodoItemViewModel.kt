@@ -38,6 +38,8 @@ class TodoItemViewModel : ViewModel() {
     val closeScreen: LiveData<Unit>
         get() = _closeScreen
 
+    private val _todoItemState = MutableStateFlow<TodoItem?>(null)
+    val todoItemState = _todoItemState.asStateFlow()
 
     private val _deadline = MutableStateFlow<Long?>(null)
     val deadline get() = _deadline.asStateFlow()
