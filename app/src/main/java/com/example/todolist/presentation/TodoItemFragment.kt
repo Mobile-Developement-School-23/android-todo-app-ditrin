@@ -3,7 +3,6 @@ package com.example.todolist.presentation
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +17,6 @@ import com.example.todolist.domain.Importance
 import com.example.todolist.domain.TodoItem
 import com.template.todoapp.ui.task_screen.spinner_adapter.TodoItemSpinnerAdapter
 import kotlinx.coroutines.launch
-import java.lang.RuntimeException
 import java.text.DateFormat
 import java.util.Locale
 
@@ -102,14 +100,12 @@ class TodoItemFragment(
     private fun launchEditMode() {
         viewModel.getTodoItemId(id)
         viewModel.todoItem.observe(viewLifecycleOwner) {
-            Log.d("lubrek1", "$it")
             it.deadline?.let { it1 ->
                 viewModel.editTodoItem(it.text,
                     it1, it.importance, it.createdAt)
             }
 
         }
-
         binding.save.setOnClickListener {
             viewModel.editTodoItem("df", 12L, Importance.LOW, 12)
         }
@@ -193,7 +189,6 @@ class TodoItemFragment(
                     return TodoItemFragment(MODE_EDIT, mode).apply {
                         arguments = Bundle().apply {
                             putString(ARG_ID, id)
-                            Log.d("dark", "$id")
                         }
                     }
                 }
