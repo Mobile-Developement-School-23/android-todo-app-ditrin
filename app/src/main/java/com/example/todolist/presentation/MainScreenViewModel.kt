@@ -6,6 +6,8 @@ import com.example.todolist.domain.DeleteTodoItemUseCase
 import com.example.todolist.domain.EditTodoItemUseCase
 import com.example.todolist.domain.GetTodoListUseCase
 import com.example.todolist.domain.TodoItem
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class MainScreenViewModel: ViewModel() {
 
@@ -16,6 +18,15 @@ class MainScreenViewModel: ViewModel() {
     private val editTodoItemUseCase = EditTodoItemUseCase(repository)
 
     val todoList = getTodoListUseCase.getTodoList()
+
+    private val _changeVisible: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val changeVisible get() = _changeVisible.asStateFlow()
+
+    var visible: Boolean = false
+        set(value) {
+            field = value
+            _changeVisible.tryEmit(value)
+        }
 
     fun deleteTodoItem(todoItem: TodoItem){
         deleteTodoItemUseCase.deleteTodoItem(todoItem)

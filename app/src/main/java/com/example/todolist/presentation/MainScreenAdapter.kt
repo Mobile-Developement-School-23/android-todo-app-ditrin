@@ -13,18 +13,17 @@ class MainScreenAdapter :
     var onTodoClickListener: ((TodoItem) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainScreenViewHolder {
-        val layout = when (viewType) {
-            VIEW_TYPE_COMPLETED -> R.layout.item_todo_complete
-            VIEW_TYPE_NOT_COMPLETED -> R.layout.item_todo_not_complete
+        return when (viewType) {
+            VIEW_TYPE_COMPLETED -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_todo_complete, parent, false)
+                MainScreenViewHolder(view)
+            }
+            VIEW_TYPE_NOT_COMPLETED -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_todo_not_complete, parent, false)
+                MainScreenViewHolder(view)
+            }
             else -> throw RuntimeException("Invalid type: $viewType")
         }
-        val view =
-            LayoutInflater.from(parent.context).inflate(
-                layout,
-                parent,
-                false
-            )
-        return MainScreenViewHolder(view)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -53,5 +52,10 @@ class MainScreenAdapter :
     companion object {
         const val VIEW_TYPE_COMPLETED = 0
         const val VIEW_TYPE_NOT_COMPLETED = 1
+    }
+
+
+    fun setOnClickListener(listener: (TodoItem) -> Unit) {
+        onTodoClickListener = listener
     }
 }
