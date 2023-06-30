@@ -22,8 +22,8 @@ class TodoItemViewModel : ViewModel() {
 
     private val repository = TodoItemsRepositoryImpl
 
-    private val _errorInputText = MutableLiveData<Boolean>()
-    val errorInputText: LiveData<Boolean> = _errorInputText
+    private val _errorInputText = MutableStateFlow(false)
+    val errorInputText = _errorInputText.asStateFlow()
 
     private val _todoItem = MutableLiveData<TodoItem>()
     val todoItem: LiveData<TodoItem>
@@ -48,6 +48,8 @@ class TodoItemViewModel : ViewModel() {
         val item = getTodoItemUseCase.getTodoItem(id)
         _todoItem.value = item
     }
+    private val taskText = MutableStateFlow("")
+
 
     fun addTodoItem(inputText: String?, inputDate: Long, importance: Importance, createdAt: Long) {
         val id = Random.nextInt().toString()
@@ -64,6 +66,11 @@ class TodoItemViewModel : ViewModel() {
             addTodoItemUseCase.addTodoItem(todoItem)
             closeScreen()
         }
+    }
+
+    fun setTaskText(text: String) {
+        taskText.tryEmit(text)
+        _errorInputText.tryEmit(false)
     }
 
     fun editTodoItem(inputText: String?, deadline: Long, importance: Importance, createdAt: Long) {

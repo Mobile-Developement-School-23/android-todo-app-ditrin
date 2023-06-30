@@ -47,10 +47,9 @@ class MainScreenFragment : Fragment(R.layout.fragment_main_screen) {
         viewModel.todoList.observe(viewLifecycleOwner) {
             mainScreenAdapter.setOnClickListener { id ->
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, TodoItemFragment("mode_edit"))
+                    .replace(R.id.fragmentContainer, TodoItemFragment.getInstance(id.id))
                     .addToBackStack(MainScreenFragment().tag)
                     .commit()
-
             }
         }
 
@@ -74,7 +73,7 @@ class MainScreenFragment : Fragment(R.layout.fragment_main_screen) {
 
         binding.buttonAddTodo.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, TodoItemFragment())
+                .replace(R.id.fragmentContainer, TodoItemFragment.getInstance("mode_add"))
                 .addToBackStack(MainScreenFragment().tag)
                 .commit()
         }
@@ -92,7 +91,7 @@ class MainScreenFragment : Fragment(R.layout.fragment_main_screen) {
             adapter = mainScreenAdapter
         }
         setupLongClickListener()
-   //     setupClickListener()
+        setupClickListener()
         setupSwipeListener(rvTodoList)
         setupSwipeListenerLeft(rvTodoList)
     }
@@ -142,14 +141,14 @@ class MainScreenFragment : Fragment(R.layout.fragment_main_screen) {
         itemTouchHelper.attachToRecyclerView(rvTodoList)
     }
 
-//    private fun setupClickListener() {
-//        mainScreenAdapter.onTodoClickListener = { id ->
-//            parentFragmentManager.beginTransaction()
-//                .add(R.id.fragmentContainer, TodoItemFragment.getInstance(id.id))
-//                .addToBackStack(MainScreenFragment().tag)
-//                .commit()
-//        }
-//    }
+    private fun setupClickListener() {
+        mainScreenAdapter.onTodoClickListener = { id ->
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, TodoItemFragment.getInstance(id.id))
+                .addToBackStack(MainScreenFragment().tag)
+                .commit()
+        }
+    }
 
     private fun setupLongClickListener() {
         mainScreenAdapter.onTodoLongClickListener = {
