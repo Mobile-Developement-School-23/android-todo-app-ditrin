@@ -20,9 +20,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (savedInstanceState == null) {
-            setCurrentFragment(MainScreenFragment())
-        }
+//        if (savedInstanceState == null) {
+//            setCurrentFragment(MainScreenFragment())
+//        }
 
         val sdk = YandexAuthSdk(
             this, YandexAuthOptions(this)
