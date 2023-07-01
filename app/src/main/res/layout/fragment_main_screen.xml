@@ -9,8 +9,8 @@
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@android:color/transparent"
         android:fitsSystemWindows="true"
+        android:background="@color/back_primary"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -29,7 +29,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin" />
-
 
             <ImageView
                 android:id="@+id/todo_visibility"
