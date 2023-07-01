@@ -1,3 +1,22 @@
 <resources>
+    <array name="importance">
+        <item>Нет</item>
+        <item>Низкий</item>
+        <item>!! Высокий</item>
+    </array>
+
     <string name="app_name">toDoList</string>
+    <string name="completed_counter">Выполнено - %s</string>
+    <string name="my_todo">Мои дела</string>
+    <string name="done">Дело сделано</string>
+    <string name="deal">Очень важное дело на выполнение которого ушло очень много врмени и сил и которое по трудозатратам не окупились и никогда не окупиться</string>
+    <string name="save">Сохранить</string>
+    <string name="just_do_it">Что надо сделать...</string>
+    <string name="importance">Важность</string>
+    <string name="low">Низкий</string>
+    <string name="common">Нет</string>
+    <string name="high">Высокий</string>
+    <string name="do_at">Сделать до</string>
+    <string name="delete">Удалить</string>
+    <string name="error_input_name">Invalid name</string>
 </resources>
