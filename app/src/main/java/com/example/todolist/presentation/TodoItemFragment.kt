@@ -42,10 +42,8 @@ class TodoItemFragment(
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[TodoItemViewModel::class.java]
         setupSpinner()
-        initViews(view)
         addTextChangeListeners()
         launchRightMode()
-        //  observeViewModel()
 
         binding.close.setOnClickListener {
             activity?.onBackPressed()
@@ -140,10 +138,6 @@ class TodoItemFragment(
                 calendar.date = todoItem.deadline
             }
         }
-    }
-
-    private fun initViews(view: View) {
-        etText = view.findViewById(R.id.text)
     }
 
     private fun addTextChangeListeners() {
