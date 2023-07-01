@@ -3,8 +3,6 @@ package com.example.todolist.presentation
 import android.app.Activity
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
