@@ -84,7 +84,6 @@ class TodoItemFragment(
             }
             activity?.onBackPressed()
         }
-
     }
 
     private fun launchRightMode() {
@@ -96,16 +95,9 @@ class TodoItemFragment(
 
     private fun launchEditMode() {
         viewModel.getTodoItemId(id)
-        viewModel.todoItem.observe(viewLifecycleOwner) {
-            it.deadline?.let { it1 ->
-                viewModel.editTodoItem(
-                    it.text,
-                    it1, it.importance, it.createdAt
-                )
-            }
-        }
         binding.save.setOnClickListener {
             viewModel.editTodoItem("df", 12L, Importance.LOW, 12)
+            activity?.onBackPressed()
         }
     }
 
@@ -113,7 +105,6 @@ class TodoItemFragment(
         viewModel.todoItem.observe(viewLifecycleOwner) {
             binding.save.setOnClickListener {
                 viewModel.addTodoItem(etText.text?.toString(), 2324324L, Importance.COMMON, 28398)
-
             }
         }
     }

@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 class RequestDTO (
     @SerialName("status") val status: String,
-    @SerialName("element") val element: TodoItemDto
+    @SerialName("element") val todoItemDto: TodoItemDto
 )
