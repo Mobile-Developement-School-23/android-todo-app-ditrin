@@ -21,6 +21,11 @@ import kotlin.random.Random
 class TodoItemViewModel : ViewModel() {
 
     private val repository = TodoItemsRepositoryImpl
+    private val getTodoItemUseCase = GetTodoItemUseCase(repository)
+    private val addTodoItemUseCase = AddTodoItemUseCase(repository)
+    private val editTodoItemUseCase = EditTodoItemUseCase(repository)
+    private val deleteTodoItemUseCase = DeleteTodoItemUseCase(repository)
+
 
     private val _errorInputText = MutableStateFlow(false)
     val errorInputText = _errorInputText.asStateFlow()
@@ -28,11 +33,6 @@ class TodoItemViewModel : ViewModel() {
     private val _todoItem = MutableLiveData<TodoItem>()
     val todoItem: LiveData<TodoItem>
         get() = _todoItem
-
-    private val getTodoItemUseCase = GetTodoItemUseCase(repository)
-    private val addTodoItemUseCase = AddTodoItemUseCase(repository)
-    private val editTodoItemUseCase = EditTodoItemUseCase(repository)
-    private val deleteTodoItemUseCase = DeleteTodoItemUseCase(repository)
 
     private val _closeScreen = MutableLiveData<Unit>()
     val closeScreen: LiveData<Unit>
@@ -48,8 +48,7 @@ class TodoItemViewModel : ViewModel() {
         val item = getTodoItemUseCase.getTodoItem(id)
         _todoItem.value = item
     }
-    private val taskText = MutableStateFlow("")
-
+    private val todoText = MutableStateFlow("")
 
     fun addTodoItem(inputText: String?, inputDate: Long, importance: Importance, createdAt: Long) {
         val id = Random.nextInt().toString()
@@ -69,7 +68,7 @@ class TodoItemViewModel : ViewModel() {
     }
 
     fun setTaskText(text: String) {
-        taskText.tryEmit(text)
+        todoText.tryEmit(text)
         _errorInputText.tryEmit(false)
     }
 

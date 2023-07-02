@@ -18,34 +18,34 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        if (savedInstanceState == null) {
-//            setCurrentFragment(MainScreenFragment())
-//        }
-
-        val sdk = YandexAuthSdk(
-            this, YandexAuthOptions(this)
-        )
-        val loginOptionsBuilder = YandexAuthLoginOptions.Builder()
-        val intent = sdk.createLoginIntent(loginOptionsBuilder.build())
-
-        val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK){
-                val yandexAuthToken = sdk.extractToken(it.resultCode, it.data)
-                if (yandexAuthToken != null){
-
-
-                    Log.d("Testus", "$yandexAuthToken.value")
-                    supportFragmentManager.beginTransaction()
-                        .add(R.id.fragmentContainer, MainScreenFragment())
-                        .commit()
-                }
-
-            } else{
-                Log.d("Test", "error")
-            }
-
+        if (savedInstanceState == null) {
+            setCurrentFragment(MainScreenFragment())
         }
-        launcher.launch(intent)
+
+//        val sdk = YandexAuthSdk(
+//            this, YandexAuthOptions(this)
+//        )
+//        val loginOptionsBuilder = YandexAuthLoginOptions.Builder()
+//        val intent = sdk.createLoginIntent(loginOptionsBuilder.build())
+//
+//        val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+//            if (it.resultCode == Activity.RESULT_OK){
+//                val yandexAuthToken = sdk.extractToken(it.resultCode, it.data)
+//                if (yandexAuthToken != null){
+//
+//
+//                    Log.d("Testus", "$yandexAuthToken.value")
+//                    supportFragmentManager.beginTransaction()
+//                        .add(R.id.fragmentContainer, MainScreenFragment())
+//                        .commit()
+//                }
+//
+//            } else{
+//                Log.d("Test", "error")
+//            }
+//
+//        }
+//        launcher.launch(intent)
     }
 
 

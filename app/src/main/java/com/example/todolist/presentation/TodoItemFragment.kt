@@ -49,7 +49,6 @@ class TodoItemFragment(
             activity?.onBackPressed()
         }
 
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.todoItemState.collect { todoItemNull ->
                 todoItemNull?.let { todoItem ->
@@ -99,10 +98,11 @@ class TodoItemFragment(
         viewModel.getTodoItemId(id)
         viewModel.todoItem.observe(viewLifecycleOwner) {
             it.deadline?.let { it1 ->
-                viewModel.editTodoItem(it.text,
-                    it1, it.importance, it.createdAt)
+                viewModel.editTodoItem(
+                    it.text,
+                    it1, it.importance, it.createdAt
+                )
             }
-
         }
         binding.save.setOnClickListener {
             viewModel.editTodoItem("df", 12L, Importance.LOW, 12)
@@ -111,14 +111,12 @@ class TodoItemFragment(
 
     private fun launchAddMode() {
         viewModel.todoItem.observe(viewLifecycleOwner) {
-            viewModel.addTodoItem(etText.text?.toString(), 2324324L, Importance.COMMON, 28398)
+            binding.save.setOnClickListener {
+                viewModel.addTodoItem(etText.text?.toString(), 2324324L, Importance.COMMON, 28398)
 
-        }
-        binding.save.setOnClickListener {
-            viewModel.addTodoItem(etText.text?.toString(), 2324324L, Importance.COMMON, 28398)
+            }
         }
     }
-
 
     private fun changeUi(todoItem: TodoItem) {
         with(binding) {
@@ -142,7 +140,12 @@ class TodoItemFragment(
 
     private fun addTextChangeListeners() {
         binding.textFrame.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
