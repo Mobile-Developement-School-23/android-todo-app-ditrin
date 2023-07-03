@@ -1,31 +1,39 @@
-package com.example.todolist.presentation
+package com.example.todolist.presentation.todoitem
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todolist.data.TodoItemsRepositoryImpl
 import com.example.todolist.domain.AddTodoItemUseCase
 import com.example.todolist.domain.DeleteTodoItemUseCase
 import com.example.todolist.domain.EditTodoItemUseCase
-import com.example.todolist.domain.GetTodoItemUseCase
+import com.example.todolist.domain.GetTodoItemsFlowUseCase
 import com.example.todolist.domain.Importance
 import com.example.todolist.domain.TodoItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.util.Locale
 import kotlin.random.Random
 
-class TodoItemViewModel : ViewModel() {
+class TodoItemViewModel(
+    private val getTodoItemsFlowUseCase: GetTodoItemsFlowUseCase,
+    private val addTodoItemUseCase: AddTodoItemUseCase,
+    private val editTodoItemUseCase: EditTodoItemUseCase,
+    private val deleteTodoItemUseCase: DeleteTodoItemUseCase,
+) : ViewModel() {
 
-    private val repository = TodoItemsRepositoryImpl
-    private val getTodoItemUseCase = GetTodoItemUseCase(repository)
-    private val addTodoItemUseCase = AddTodoItemUseCase(repository)
-    private val editTodoItemUseCase = EditTodoItemUseCase(repository)
-    private val deleteTodoItemUseCase = DeleteTodoItemUseCase(repository)
+    private val itemIdMutableFlow = MutableStateFlow<String?>(null)
 
+    val todoItemFlow = combine(
+        getTodoItemsFlowUseCase.getTodoItemsFlow(),
+        itemIdMutableFlow,
+        transform = { todoItems, itemId ->
+            todoItems.firstOrNull { it.id == itemId }
+        }
+    )
 
     private val _errorInputText = MutableStateFlow(false)
     val errorInputText = _errorInputText.asStateFlow()
@@ -38,17 +46,14 @@ class TodoItemViewModel : ViewModel() {
     val closeScreen: LiveData<Unit>
         get() = _closeScreen
 
-    private val _todoItemState = MutableStateFlow<TodoItem?>(null)
-    val todoItemState = _todoItemState.asStateFlow()
-
     private val _deadline = MutableStateFlow<Long?>(null)
     val deadline get() = _deadline.asStateFlow()
 
-    fun getTodoItemId(id: String) {
-        val item = getTodoItemUseCase.getTodoItem(id)
-        _todoItem.value = item
-    }
     private val todoText = MutableStateFlow("")
+
+    fun onItemIdGot(id: String) {
+        itemIdMutableFlow.value = id
+    }
 
     fun addTodoItem(inputText: String?, inputDate: Long, importance: Importance, createdAt: Long) {
         val id = Random.nextInt().toString()
@@ -62,7 +67,9 @@ class TodoItemViewModel : ViewModel() {
         if (fieldValid) {
             val todoItem =
                 TodoItem(id, text, importance, deadline, isComplete, createdAt, modifiedAt)
-            addTodoItemUseCase.addTodoItem(todoItem)
+            viewModelScope.launch {
+                addTodoItemUseCase.addTodoItem(todoItem)
+            }
             closeScreen()
         }
     }
@@ -84,14 +91,18 @@ class TodoItemViewModel : ViewModel() {
                     text = text,
                     deadline = deadline,
                     importance = importance)
-                editTodoItemUseCase.editTodoItem(item)
+                viewModelScope.launch {
+                    editTodoItemUseCase.editTodoItem(item)
+                }
                 closeScreen()
             }
         }
     }
 
     fun deleteTodoItem(todoItem: TodoItem) {
-        deleteTodoItemUseCase.deleteTodoItem(todoItem)
+        viewModelScope.launch {
+            deleteTodoItemUseCase.deleteTodoItem(todoItem.id)
+        }
     }
 
     private fun parseName(inputText: String?): String {

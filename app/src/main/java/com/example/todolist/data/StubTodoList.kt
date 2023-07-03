@@ -3,7 +3,7 @@ package com.example.todolist.data
 import com.example.todolist.domain.Importance
 import com.example.todolist.domain.TodoItem
 
-val todoListTemp = mutableListOf(
+val todoListMocked = mutableListOf(
     TodoItem(
         id = "1",
         text = "дела делишки",

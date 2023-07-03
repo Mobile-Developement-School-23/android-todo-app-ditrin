@@ -1,4 +1,4 @@
-package com.template.todoapp.ui.task_screen.spinner_adapter
+package com.example.todolist.presentation.todoitem
 
 import android.content.Context
 import android.view.View

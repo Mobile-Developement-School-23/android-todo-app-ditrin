@@ -1,16 +1,14 @@
 package com.example.todolist.domain
 
-import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.StateFlow
 
 interface TodoItemsRepository {
 
-    fun addTodoItem(todoItem: TodoItem)
+    val todoItemsStateFlow: StateFlow<List<TodoItem>>
 
-    fun deleteTodoItem(todoItem: TodoItem)
+    suspend fun addTodoItem(todoItem: TodoItem)
 
-    fun editTodoItem(todoItem: TodoItem)
+    suspend fun deleteTodoItem(id: String)
 
-    fun getTodoItem(id: String): TodoItem
-
-    fun getTodoList(): LiveData<List<TodoItem>>
+    suspend fun editTodoItem(todoItem: TodoItem)
 }

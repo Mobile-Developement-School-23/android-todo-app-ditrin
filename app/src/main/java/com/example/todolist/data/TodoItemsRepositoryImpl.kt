@@ -1,61 +1,56 @@
 package com.example.todolist.data
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.example.todolist.domain.Importance
+import com.example.todolist.data.remote.Networking
+import com.example.todolist.data.remote.TodoListAPI
 import com.example.todolist.domain.TodoItem
 import com.example.todolist.domain.TodoItemsRepository
-import java.lang.RuntimeException
-import kotlin.random.Random
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.withContext
 
-object TodoItemsRepositoryImpl : TodoItemsRepository {
+class TodoItemsRepositoryImpl(
+    private val todoListApi: TodoListAPI = Networking.todoListAPI,
+) : TodoItemsRepository {
 
-    private val todoListLiveData = MutableLiveData<List<TodoItem>>()
+    private val todoItemsMutableStateFlow = MutableStateFlow(todoListMocked.sortedBy { it.id })
+    override val todoItemsStateFlow = todoItemsMutableStateFlow.asStateFlow()
 
-    private val todoItemsList = sortedSetOf<TodoItem>({o1, o2 -> o1.id.compareTo(o2.id)})
+    override suspend fun addTodoItem(todoItem: TodoItem) {
+        withContext(Dispatchers.IO) {
+            todoItemsMutableStateFlow.update { current ->
+                val newTodoItems = current.toMutableList()
+                newTodoItems.add(todoItem)
 
-    init {
-        for (i in 0 until todoListTemp.size) {
-            todoItemsList.add(todoListTemp[i])
+                newTodoItems.sortedBy { it.id }
+            }
         }
-        updateList()
     }
 
-    override fun addTodoItem(todoItem: TodoItem) {
-        if (todoItem.id == null) {
-            todoItem.copy(id = Random.nextInt().toString())
+    override suspend fun deleteTodoItem(id: String) {
+        withContext(Dispatchers.IO) {
+            todoItemsMutableStateFlow.update { current ->
+                val newTodoItems = current.toMutableList()
+                newTodoItems.removeIf { it.id == id }
+
+                newTodoItems.sortedBy { it.id }
+            }
         }
-        todoItem.copy(importance = Importance.COMMON)
-        todoItem.copy(deadline = 0)
-        todoItem.copy(createdAt = 0)
-        todoItem.copy(modifiedAt = null)
-        todoItemsList.add(todoItem)
-        updateList()
     }
 
-    override fun deleteTodoItem(todoItem: TodoItem) {
-        todoItemsList.remove(todoItem)
-        updateList()
-    }
+    override suspend fun editTodoItem(todoItem: TodoItem) {
+        withContext(Dispatchers.IO) {
+            todoItemsMutableStateFlow.update { current ->
+                val newTodoItems = current.toMutableList()
 
-    override fun editTodoItem(todoItem: TodoItem) {
-        val oldElement = getTodoItem(todoItem.id)
-        todoItemsList.remove(oldElement)
-        addTodoItem(todoItem)
-    }
+                if (newTodoItems.removeIf { it.id == todoItem.id }) {
+                    newTodoItems.add(todoItem)
+                }
 
-    override fun getTodoItem(id: String): TodoItem {
-        return todoItemsList.find {
-            it.id == id
-        } ?: throw RuntimeException("Element with id $id not found")
+                newTodoItems.sortedBy { it.id }
+            }
+        }
     }
-
-    override fun getTodoList(): LiveData<List<TodoItem>> {
-        return todoListLiveData
-    }
-
-    private fun updateList() {
-        todoListLiveData.value = todoItemsList.toList()
-    }
-
 }

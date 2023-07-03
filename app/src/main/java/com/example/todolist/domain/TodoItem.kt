@@ -14,7 +14,7 @@ data class TodoItem(
     }
 }
 
-enum class Importance {
+enum class Importance{
     LOW,
     COMMON,
     HIGH,

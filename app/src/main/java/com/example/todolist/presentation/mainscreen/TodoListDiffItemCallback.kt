@@ -1,9 +1,9 @@
-package com.example.todolist.presentation
+package com.example.todolist.presentation.mainscreen
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.todolist.domain.TodoItem
 
-class MainScreenDiffItemCallback: DiffUtil.ItemCallback<TodoItem>() {
+class TodoListDiffItemCallback: DiffUtil.ItemCallback<TodoItem>() {
     override fun areItemsTheSame(oldItem: TodoItem, newItem: TodoItem): Boolean {
         return oldItem.id == newItem.id
     }
