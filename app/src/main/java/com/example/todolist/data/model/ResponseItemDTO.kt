@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ResponseItemDTO(
-    @SerializedName("element") val todoItemDto: TodoItemDto,
+    @SerializedName("element") val element: TodoItemDto,
     @SerializedName("status") val status: String = "OK",
+    @SerializedName("revision") val revision: Int
 )

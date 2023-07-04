@@ -4,7 +4,7 @@ import com.example.todolist.domain.TodoItem
 
 sealed interface TodoItemsNavigationAction {
 
-    data object OpenAddTodoItemScreen : TodoItemsNavigationAction
+    object OpenAddTodoItemScreen : TodoItemsNavigationAction
 
     data class OpenEditTodoItemScreen(
         val todoItem: TodoItem,

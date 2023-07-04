@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
@@ -23,7 +24,7 @@ import kotlinx.coroutines.flow.onEach
 class TodoListFragment : Fragment(R.layout.fragment_main_screen) {
 
     private val viewModel: TodoListViewModel by viewModels {
-        (requireActivity().application as TodoListApplication).todoItemsViewModelFactory
+        (requireActivity().application as TodoListApplication).todoListItemViewModelFactory
     }
 
     private val mainScreenAdapter: TodoListAdapter by lazy {
@@ -127,6 +128,7 @@ class TodoListFragment : Fragment(R.layout.fragment_main_screen) {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val item = mainScreenAdapter.currentList[viewHolder.adapterPosition]
+                Toast.makeText(requireContext(), "onSwipe", Toast.LENGTH_SHORT).show()
                 viewModel.onLeftToRightSwiped(item)
             }
         }
@@ -150,6 +152,7 @@ class TodoListFragment : Fragment(R.layout.fragment_main_screen) {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val item = mainScreenAdapter.currentList[viewHolder.adapterPosition]
+                mainScreenAdapter.notifyItemChanged(viewHolder.adapterPosition)
                 viewModel.onRightToLeftSwiped(item)
             }
         }

@@ -3,23 +3,18 @@ package com.example.todolist.data.remote
 import com.example.todolist.data.model.RequestDTO
 import com.example.todolist.data.model.ResponseItemDTO
 import com.example.todolist.data.model.ResponseListDTO
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Path
+import retrofit2.Response
+import retrofit2.http.*
 
 interface TodoListAPI {
     @GET("list")
-    suspend fun getTodoList(): ResponseListDTO
+    suspend fun getTodoList(): Response<ResponseListDTO>
 
     @POST("list")
     suspend fun addTodoItem(
         @Body requestDTO: RequestDTO,
         @Header("X-Last-Known-Revision") revision: Int
-    ): ResponseItemDTO
+    ): Response<ResponseItemDTO>
 
 
     @PUT("list/{id}")
@@ -27,11 +22,18 @@ interface TodoListAPI {
         @Path("id") todoId: String,
         @Body requestDTO: RequestDTO,
         @Header("X-Last-Known-Revision") revision: Int
-    ): ResponseItemDTO
+    ): Response<ResponseItemDTO>
 
     @DELETE("list/{id}")
     suspend fun deleteTodoItem(
         @Path("id") todoId: String,
         @Header("X-Last-Known-Revision") revision: Int
-    ): ResponseItemDTO
+    ): Response<ResponseItemDTO>
+
+
+    @GET("list/{id}")
+    suspend fun getTodoItem(
+        @Path("id") todoId: String
+    ): Response<ResponseItemDTO>
+
 }

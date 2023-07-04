@@ -2,32 +2,33 @@ package com.example.todolist.presentation.todoitem
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.text.Editable
-import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.flowWithLifecycle
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.todolist.R
+import com.example.todolist.TodoListApplication
 import com.example.todolist.databinding.FragmentTodoItemBinding
 import com.example.todolist.domain.Importance
 import com.example.todolist.domain.TodoItem
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import java.text.DateFormat
-import java.util.Locale
+import java.util.*
 
 class TodoItemFragment : Fragment(R.layout.fragment_todo_item) {
 
     private lateinit var binding: FragmentTodoItemBinding
-    private lateinit var viewModel: TodoItemViewModel
+    private val viewModel: TodoItemViewModel by viewModels {
+        (requireActivity().application as TodoListApplication).todoItemViewModelFactory
+    }
 
     @Suppress("DEPRECATION")
     private val screenMode: TodoItemScreenMode by lazy {
@@ -45,24 +46,24 @@ class TodoItemFragment : Fragment(R.layout.fragment_todo_item) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[TodoItemViewModel::class.java]
 
+        launchRightMode()
         setupSpinner()
         addTextChangeListeners()
-        launchRightMode()
+
 
         binding.close.setOnClickListener {
-            activity?.onBackPressed()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-        viewModel.todoItemFlow
-            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
-            .onEach { todoItem ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.todoItemFlow.collect { todoItem ->
                 if (todoItem != null) {
-                    changeUi(todoItem)
+                    setupCurrentItem(todoItem)
                 }
+                Log.d("textView", "$todoItem")
             }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.deadline.collect {
@@ -92,33 +93,73 @@ class TodoItemFragment : Fragment(R.layout.fragment_todo_item) {
             }
             activity?.onBackPressed()
         }
+
     }
 
     private fun launchRightMode() {
         when (val localScreenMode = screenMode) {
-            is TodoItemScreenMode.Add -> launchAddMode()
-            is TodoItemScreenMode.Edit -> launchEditMode(id = localScreenMode.id)
-        }
-    }
-
-    private fun launchEditMode(id: String) {
-        viewModel.onItemIdGot(id)
-        binding.save.setOnClickListener {
-            viewModel.editTodoItem("df", 12L, Importance.LOW, 12)
-            activity?.onBackPressed()
-        }
-    }
-
-    private fun launchAddMode() {
-        viewModel.todoItem.observe(viewLifecycleOwner) {
-            binding.save.setOnClickListener {
-                viewModel.addTodoItem(binding.textFrame.text?.toString(), 2324324L, Importance.COMMON, 28398)
+            is TodoItemScreenMode.Add -> {
+                Toast.makeText(requireContext(), "ADD", Toast.LENGTH_SHORT).show()
+                launchAddMode()
+            }
+            is TodoItemScreenMode.Edit -> {
+                Toast.makeText(requireContext(), "EDIT", Toast.LENGTH_SHORT).show()
+                launchEditMode(id = localScreenMode.id)
             }
         }
     }
 
-    private fun changeUi(todoItem: TodoItem) {
+    private fun launchEditMode(id: String) {
+
+        viewModel.setTodoItemId(id)
+
+        binding.save.setOnClickListener {
+
+            val importance = when (binding.importanceSpinner.selectedItemPosition) {
+                0 -> Importance.COMMON
+                1 -> Importance.LOW
+                2 -> Importance.HIGH
+                else -> {
+                    throw RuntimeException()
+                }
+            }
+
+            viewModel.editTodoItem(
+                binding.textFrame.text.toString(),
+                binding.calendar.date,
+                importance,
+                Calendar.getInstance().timeInMillis
+            )
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+    }
+
+    private fun launchAddMode() {
+
+        binding.save.setOnClickListener {
+
+            val importance = when (binding.importanceSpinner.selectedItemPosition) {
+                0 -> Importance.COMMON
+                1 -> Importance.LOW
+                2 -> Importance.HIGH
+                else -> {
+                    throw RuntimeException()
+                }
+            }
+
+            viewModel.addTodoItem(
+                binding.textFrame.text.toString(),
+                binding.calendar.date,
+                importance,
+                Calendar.getInstance().timeInMillis
+            )
+        }
+    }
+
+    private fun setupCurrentItem(todoItem: TodoItem) {
+        viewModel.setTodoItem(todoItem)
         with(binding) {
+            Log.d("textView", todoItem.text)
             textFrame.setText(todoItem.text)
             viewModel.setTaskText(todoItem.text)
             when (todoItem.importance) {
@@ -138,22 +179,11 @@ class TodoItemFragment : Fragment(R.layout.fragment_todo_item) {
     }
 
     private fun addTextChangeListeners() {
-        binding.textFrame.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        binding.textFrame.doAfterTextChanged {
+            it?.let {
                 viewModel.resetErrorInputText()
             }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
-        })
+        }
     }
 
     private fun setupSpinner() {
@@ -189,7 +219,7 @@ class TodoItemFragment : Fragment(R.layout.fragment_todo_item) {
 sealed interface TodoItemScreenMode : Parcelable {
 
     @Parcelize
-    data object Add : TodoItemScreenMode
+    object Add : TodoItemScreenMode
 
     @Parcelize
     data class Edit(

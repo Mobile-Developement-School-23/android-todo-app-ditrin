@@ -1,10 +1,9 @@
 package com.example.todolist.data.model
 
-import kotlinx.serialization.SerialName
+import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class RequestDTO (
-    @SerialName("status") val status: String,
-    @SerialName("element") val todoItemDto: TodoItemDto
+class RequestDTO(
+    @SerializedName("element") val element: TodoItemDto
 )

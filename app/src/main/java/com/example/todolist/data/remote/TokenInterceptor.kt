@@ -5,7 +5,7 @@ import okhttp3.Response
 
 internal class TokenInterceptor : Interceptor {
 
-    private val token = "Bearer ${TOKEN}"
+    private val token = "Bearer $TOKEN"
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request().newBuilder()
