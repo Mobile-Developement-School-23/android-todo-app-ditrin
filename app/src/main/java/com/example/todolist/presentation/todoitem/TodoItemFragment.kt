@@ -51,17 +51,15 @@ class TodoItemFragment : Fragment(R.layout.fragment_todo_item) {
         setupSpinner()
         addTextChangeListeners()
 
-
         binding.close.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.todoItemFlow.collect { todoItem ->
+            viewModel.todoItem.collect { todoItem ->
                 if (todoItem != null) {
                     setupCurrentItem(todoItem)
                 }
-                Log.d("textView", "$todoItem")
             }
         }
 
@@ -93,14 +91,14 @@ class TodoItemFragment : Fragment(R.layout.fragment_todo_item) {
             }
             activity?.onBackPressed()
         }
-
     }
 
     private fun launchRightMode() {
         when (val localScreenMode = screenMode) {
-            is TodoItemScreenMode.Add -> {
+                    is TodoItemScreenMode.Add -> {
                 Toast.makeText(requireContext(), "ADD", Toast.LENGTH_SHORT).show()
                 launchAddMode()
+
             }
             is TodoItemScreenMode.Edit -> {
                 Toast.makeText(requireContext(), "EDIT", Toast.LENGTH_SHORT).show()
@@ -153,13 +151,13 @@ class TodoItemFragment : Fragment(R.layout.fragment_todo_item) {
                 importance,
                 Calendar.getInstance().timeInMillis
             )
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
     }
 
     private fun setupCurrentItem(todoItem: TodoItem) {
         viewModel.setTodoItem(todoItem)
         with(binding) {
-            Log.d("textView", todoItem.text)
             textFrame.setText(todoItem.text)
             viewModel.setTaskText(todoItem.text)
             when (todoItem.importance) {

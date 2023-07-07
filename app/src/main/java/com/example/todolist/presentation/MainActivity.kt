@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.todolist.R
-import com.example.todolist.presentation.mainscreen.TodoListFragment
+import com.example.todolist.presentation.todolist.TodoListFragment
 
 class MainActivity : AppCompatActivity() {
 

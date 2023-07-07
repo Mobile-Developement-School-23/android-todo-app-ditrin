@@ -1,4 +1,4 @@
-package com.example.todolist.presentation.mainscreen
+package com.example.todolist.presentation.todolist
 
 import com.example.todolist.domain.TodoItem
 

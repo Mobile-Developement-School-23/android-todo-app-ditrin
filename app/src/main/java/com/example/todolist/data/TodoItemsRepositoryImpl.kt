@@ -1,7 +1,10 @@
 package com.example.todolist.data
 
+import android.app.Application
 import android.content.Context
 import android.util.Log
+import com.example.todolist.TodoListApplication
+import com.example.todolist.data.mappers.TodoListMapper
 import com.example.todolist.data.mappers.toBody
 import com.example.todolist.data.mappers.toEntity
 import com.example.todolist.data.model.NetworkError
@@ -20,6 +23,10 @@ class TodoItemsRepositoryImpl(
     private val context: Context
 ) : TodoItemsRepository {
 
+   //    private val application = TodoListApplication()
+
+  //  private val todoListDao = AppDataBase.getInstance(application = Application()).todoListDao()
+
     companion object {
         const val KEY_REVISION = "key_revision"
     }
@@ -34,7 +41,7 @@ class TodoItemsRepositoryImpl(
         sharedPreferences.edit()
     }
 
-    private val todoItemsMutableStateFlow = MutableStateFlow(todoListMocked.sortedBy { it.id })
+    private val mapper = TodoListMapper()
 
     override fun getTodoListItem(): Flow<List<TodoItem>> {
 
@@ -44,9 +51,11 @@ class TodoItemsRepositoryImpl(
                 is NetworkError -> {
 
                 }
-                is NetworkException -> {
 
+                is NetworkException -> {
+                    //            todoListDao.getTodoList()
                 }
+
                 is NetworkSuccess -> {
                     editRevision.putInt(KEY_REVISION, response.data.revision).apply()
                     emit(response.data.list.toEntity())
@@ -64,11 +73,12 @@ class TodoItemsRepositoryImpl(
             is NetworkError -> {
                 Log.d("testConnectionNetwork", "NetworkError add item todo")
             }
+
             is NetworkException -> {
-                Log.d("testConnectionNetwork", "NetworkException add item todo")
+                //        todoListDao.addTodoItem(mapper.mapEntityToDbModel(todoItem))
             }
+
             is NetworkSuccess -> {
-                Log.d("testConnectionNetwork", "NetworkSuccess add item todo")
                 editRevision.putInt(KEY_REVISION, response.data.revision).apply()
             }
         }
@@ -81,11 +91,12 @@ class TodoItemsRepositoryImpl(
             is NetworkError -> {
                 Log.d("testConnectionNetwork", "NetworkError delete item todo")
             }
+
             is NetworkException -> {
-                Log.d("testConnectionNetwork", "NetworkException delete item todo")
+                //          todoListDao.deleteTodoItem(id)
             }
+
             is NetworkSuccess -> {
-                Log.d("testConnectionNetwork", "NetworkSuccess delete item todo")
                 editRevision.putInt(KEY_REVISION, response.data.revision).apply()
             }
         }
@@ -98,21 +109,21 @@ class TodoItemsRepositoryImpl(
             todoListApi.updateTodoItem(todoItem.id, todoItem.toBody(), revision)
         }) {
             is NetworkError -> {
-                Log.d("testConnectionNetwork", "NetworkError update item todo")
             }
+
             is NetworkException -> {
-                Log.d("testConnectionNetwork", "NetworkException update item todo")
+                //        todoListDao.addTodoItem(mapper.mapEntityToDbModel(todoItem))
             }
+
             is NetworkSuccess -> {
-                Log.d("testConnectionNetwork", "NetworkSuccess update item todo")
                 editRevision.putInt(KEY_REVISION, response.data.revision).apply()
             }
         }
     }
 
-    override suspend fun getTodoItemById(todoId: String): TodoItem? {
+    override suspend fun getTodoItemById(id: String): TodoItem? {
 
-        return when(val response = handleApi { todoListApi.getTodoItem(todoId) }) {
+        return when (val response = handleApi { todoListApi.getTodoItem(id) }) {
             is NetworkError -> {
                 Log.d("testConnectionNetwork", "NetworkError getTodoItemById item todo")
                 null
@@ -122,7 +133,6 @@ class TodoItemsRepositoryImpl(
                 null
             }
             is NetworkSuccess -> {
-                Log.d("testConnectionNetwork", "NetworkSuccess getTodoItemById item todo")
                 response.data.element.toEntity()
             }
         }

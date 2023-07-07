@@ -8,11 +8,7 @@ data class TodoItem(
     val isCompleted: Boolean,
     val createdAt: Long,
     val modifiedAt: Long?,
-) {
-    companion object {
-        const val UNDEFINED_ID = ""
-    }
-}
+)
 
 enum class Importance{
     LOW,

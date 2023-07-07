@@ -21,17 +21,16 @@ class TodoItemViewModel(
 
     private val itemIdMutableFlow = MutableStateFlow<String?>(null)
 
-//    val todoItemFlow = combine(
-//        getTodoItemsFlowUseCase.getTodoItemsFlow(),
-//        itemIdMutableFlow,
-//        transform = { todoItems, itemId ->
-//            todoItems.firstOrNull { it.id == itemId }
-//        }
-//    )
+    val todoItemFlowCombine = combine(
+        getTodoItemsFlowUseCase.getTodoItemsFlow(),
+        itemIdMutableFlow,
+        transform = { todoItems, itemId ->
+            todoItems.firstOrNull { it.id == itemId }
+        }
+    )
 
     val todoItemFlow = getTodoItemsFlowUseCase.getTodoItemsFlow()
         .map { it.findLast { id -> id.id == itemIdMutableFlow.value } }
-
 
     private val _errorInputText = MutableStateFlow(false)
     val errorInputText = _errorInputText.asStateFlow()
@@ -60,8 +59,6 @@ class TodoItemViewModel(
         viewModelScope.launch {
             _todoItem.emit(getTodoItemUseCase(id))
         }
-
-
     }
 
     fun setTodoItem(todoItem: TodoItem) {
@@ -110,10 +107,8 @@ class TodoItemViewModel(
             viewModelScope.launch {
                 editTodoItemUseCase.editTodoItem(item)
             }
-
             closeScreen()
         }
-
     }
 
     fun deleteTodoItem(todoItem: TodoItem) {

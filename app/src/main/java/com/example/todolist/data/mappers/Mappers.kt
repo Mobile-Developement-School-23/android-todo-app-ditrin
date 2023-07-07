@@ -5,7 +5,6 @@ import com.example.todolist.data.model.TodoItemDto
 import com.example.todolist.domain.Importance
 import com.example.todolist.domain.TodoItem
 
-
 fun String.importanceCurrent(): Importance {
     return when (this) {
         "low" -> Importance.LOW
@@ -28,13 +27,11 @@ fun TodoItemDto.toEntity() = TodoItem(
 
 fun List<TodoItemDto>.toEntity() = this.map { it.toEntity() }
 
-
 fun Importance.toBody(): String = when (this) {
     Importance.LOW -> "low"
     Importance.COMMON -> "basic"
     Importance.HIGH -> "important"
 }
-
 
 fun TodoItem.toBody(): RequestDTO {
     val todoItemApi = TodoItemDto(
@@ -45,8 +42,7 @@ fun TodoItem.toBody(): RequestDTO {
         done = isCompleted,
         changed_at = (modifiedAt ?: createdAt).toInt(),
         created_at = createdAt.toInt(),
-        last_updated_by = "cf1"
+        last_updated_by = "android"
     )
-
     return RequestDTO(todoItemApi)
 }

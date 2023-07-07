@@ -1,8 +1,9 @@
-package com.example.todolist.presentation.mainscreen
+package com.example.todolist.presentation.todolist
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.todolist.TodoListApplication
 import com.example.todolist.domain.DeleteTodoItemUseCase
 import com.example.todolist.domain.EditTodoItemUseCase
 import com.example.todolist.domain.GetTodoItemsFlowUseCase
@@ -17,10 +18,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class TodoListViewModel(
-    getTodoItemsFlowUseCase: GetTodoItemsFlowUseCase,
+    application: TodoListApplication,
+    private val getTodoItemsFlowUseCase: GetTodoItemsFlowUseCase,
     private val deleteTodoItemUseCase: DeleteTodoItemUseCase,
     private val editTodoItemUseCase: EditTodoItemUseCase,
-) : ViewModel() {
+) : AndroidViewModel(application) {
 
     private val navigationActionMutableFlow = MutableSharedFlow<TodoItemsNavigationAction>()
     val navigationActionFlow = navigationActionMutableFlow.asSharedFlow()
@@ -44,11 +46,11 @@ class TodoListViewModel(
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, error ->
         Log.e("ERROR", "$error")
-        // TODO
     }
 
     fun onEyeClicked() {
         isEyeVisibleMutableFlow.update { !it }
+
     }
 
     fun onTodoItemClicked(todoItem: TodoItem) {

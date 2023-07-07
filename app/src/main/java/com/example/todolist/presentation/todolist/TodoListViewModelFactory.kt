@@ -1,7 +1,8 @@
-package com.example.todolist.presentation.mainscreen
+package com.example.todolist.presentation.todolist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.todolist.TodoListApplication
 import com.example.todolist.domain.DeleteTodoItemUseCase
 import com.example.todolist.domain.EditTodoItemUseCase
 import com.example.todolist.domain.GetTodoItemsFlowUseCase
@@ -18,6 +19,7 @@ class TodoListViewModelFactory(
             getTodoItemsFlowUseCase = getTodoItemsFlowUseCase,
             deleteTodoItemUseCase = deleteTodoItemUseCase,
             editTodoItemUseCase = editTodoItemUseCase,
+            application = TodoListApplication()
         ) as? T
             ?: throw ClassCastException("Factory for $modelClass does not exist!")
     }
