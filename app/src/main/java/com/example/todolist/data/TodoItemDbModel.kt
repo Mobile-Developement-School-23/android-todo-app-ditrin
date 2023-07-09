@@ -7,7 +7,7 @@ import com.example.todolist.domain.Importance
 
 @Entity(tableName = "todo_item")
 data class TodoItemDbModel(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey//(autoGenerate = true)
     @ColumnInfo("id") val id: String,
     @ColumnInfo("text") val text: String,
     @ColumnInfo("importance") val importance: Importance,

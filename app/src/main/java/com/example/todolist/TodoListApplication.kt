@@ -1,7 +1,6 @@
 package com.example.todolist
 
 import android.app.Application
-import android.content.Context
 import com.example.todolist.data.TodoItemsRepositoryImpl
 import com.example.todolist.domain.AddTodoItemUseCase
 import com.example.todolist.domain.DeleteTodoItemUseCase
@@ -9,14 +8,13 @@ import com.example.todolist.domain.EditTodoItemUseCase
 import com.example.todolist.domain.GetTodoItemUseCase
 import com.example.todolist.domain.GetTodoItemsFlowUseCase
 import com.example.todolist.domain.TodoItemsRepository
-import com.example.todolist.presentation.todolist.TodoListViewModelFactory
 import com.example.todolist.presentation.todoitem.TodoItemViewModelFactory
-import kotlinx.coroutines.withContext
+import com.example.todolist.presentation.todolist.TodoListViewModelFactory
 
 class TodoListApplication : Application() {
 
     private val todoItemsRepository: TodoItemsRepository by lazy {
-        TodoItemsRepositoryImpl(context = applicationContext)
+        TodoItemsRepositoryImpl(context = this.applicationContext, application = this)
     }
 
     private fun createGetTodoItemFlowUseCase() = GetTodoItemUseCase(
@@ -44,6 +42,7 @@ class TodoListApplication : Application() {
             getTodoItemsFlowUseCase = createGetTodoItemsFlowUseCase(),
             deleteTodoItemUseCase = createDeleteTodoItemUseCase(),
             editTodoItemUseCase = createEditTodoItemUseCase(),
+            application = this
         )
     }
 
