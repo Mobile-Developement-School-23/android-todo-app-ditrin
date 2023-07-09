@@ -11,6 +11,7 @@ class TodoListViewModelFactory(
     private val getTodoItemsFlowUseCase: GetTodoItemsFlowUseCase,
     private val deleteTodoItemUseCase: DeleteTodoItemUseCase,
     private val editTodoItemUseCase: EditTodoItemUseCase,
+    private val application: TodoListApplication
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -19,7 +20,7 @@ class TodoListViewModelFactory(
             getTodoItemsFlowUseCase = getTodoItemsFlowUseCase,
             deleteTodoItemUseCase = deleteTodoItemUseCase,
             editTodoItemUseCase = editTodoItemUseCase,
-            application = TodoListApplication()
+            application = this.application
         ) as? T
             ?: throw ClassCastException("Factory for $modelClass does not exist!")
     }

@@ -1,6 +1,5 @@
 package com.example.todolist.data
 
-import android.app.Application
 import android.content.Context
 import android.util.Log
 import com.example.todolist.TodoListApplication
@@ -20,12 +19,12 @@ import kotlinx.coroutines.flow.*
 
 class TodoItemsRepositoryImpl(
     private val todoListApi: TodoListAPI = Networking.todoListAPI,
-    private val context: Context
+    private val context: Context,
+    private val application: TodoListApplication
 ) : TodoItemsRepository {
 
-   //    private val application = TodoListApplication()
-
-  //  private val todoListDao = AppDataBase.getInstance(application = Application()).todoListDao()
+    private val todoListDao =
+        AppDataBase.getInstance(application).todoListDao()
 
     companion object {
         const val KEY_REVISION = "key_revision"
@@ -53,7 +52,7 @@ class TodoItemsRepositoryImpl(
                 }
 
                 is NetworkException -> {
-                    //            todoListDao.getTodoList()
+                    todoListDao.getTodoList()
                 }
 
                 is NetworkSuccess -> {
@@ -75,7 +74,7 @@ class TodoItemsRepositoryImpl(
             }
 
             is NetworkException -> {
-                //        todoListDao.addTodoItem(mapper.mapEntityToDbModel(todoItem))
+                todoListDao.addTodoItem(mapper.mapEntityToDbModel(todoItem))
             }
 
             is NetworkSuccess -> {
@@ -93,7 +92,7 @@ class TodoItemsRepositoryImpl(
             }
 
             is NetworkException -> {
-                //          todoListDao.deleteTodoItem(id)
+                todoListDao.deleteTodoItem(id)
             }
 
             is NetworkSuccess -> {
@@ -112,7 +111,7 @@ class TodoItemsRepositoryImpl(
             }
 
             is NetworkException -> {
-                //        todoListDao.addTodoItem(mapper.mapEntityToDbModel(todoItem))
+                todoListDao.addTodoItem(mapper.mapEntityToDbModel(todoItem))
             }
 
             is NetworkSuccess -> {
@@ -128,10 +127,12 @@ class TodoItemsRepositoryImpl(
                 Log.d("testConnectionNetwork", "NetworkError getTodoItemById item todo")
                 null
             }
+
             is NetworkException -> {
                 Log.d("testConnectionNetwork", " NetworkException getTodoItemById item todo")
                 null
             }
+
             is NetworkSuccess -> {
                 response.data.element.toEntity()
             }

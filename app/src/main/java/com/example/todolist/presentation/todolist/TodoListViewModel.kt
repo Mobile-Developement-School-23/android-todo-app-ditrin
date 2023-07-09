@@ -18,10 +18,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class TodoListViewModel(
-    application: TodoListApplication,
     private val getTodoItemsFlowUseCase: GetTodoItemsFlowUseCase,
     private val deleteTodoItemUseCase: DeleteTodoItemUseCase,
     private val editTodoItemUseCase: EditTodoItemUseCase,
+    application: TodoListApplication
 ) : AndroidViewModel(application) {
 
     private val navigationActionMutableFlow = MutableSharedFlow<TodoItemsNavigationAction>()
