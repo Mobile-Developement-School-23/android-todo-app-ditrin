@@ -9,6 +9,7 @@ import com.example.todolist.databinding.ItemTodoCompleteBinding
 import com.example.todolist.databinding.ItemTodoNotCompleteBinding
 import com.example.todolist.domain.Importance
 import com.example.todolist.domain.TodoItem
+import com.example.todolist.parseDate
 
 class TodoListAdapter(
     private val onItemClick: (TodoItem) -> Unit,
@@ -69,6 +70,7 @@ class TodoListAdapter(
             this.todoItem = todoItem
 
             binding.text.text = todoItem.text
+            binding.deadline.text = todoItem.deadline.parseDate()
 
             when (todoItem.importance) {
                 Importance.LOW -> {
@@ -104,6 +106,7 @@ class TodoListAdapter(
             this.todoItem = todoItem
 
             binding.text.text = todoItem.text
+            binding.deadline.text = todoItem.deadline.parseDate()
 
             when (todoItem.importance) {
                 Importance.LOW -> {

@@ -18,6 +18,7 @@ import com.example.todolist.presentation.todoitem.TodoItemFragment
 import com.example.todolist.presentation.todoitem.TodoItemScreenMode
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.toList
 import java.util.Collections
 
 class TodoListFragment : Fragment(R.layout.fragment_main_screen) {
@@ -51,6 +52,7 @@ class TodoListFragment : Fragment(R.layout.fragment_main_screen) {
 
         binding.todoVisibility.setOnClickListener {
             viewModel.onEyeClicked()
+
             viewModel.todoItemsFlow
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .onEach { todoItems ->

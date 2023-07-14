@@ -11,11 +11,20 @@ import com.example.todolist.domain.TodoItem
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.combineTransform
+import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.DateFormat
+import java.util.Locale
 
 class TodoListViewModel(
     private val getTodoItemsFlowUseCase: GetTodoItemsFlowUseCase,
@@ -27,7 +36,7 @@ class TodoListViewModel(
     private val navigationActionMutableFlow = MutableSharedFlow<TodoItemsNavigationAction>()
     val navigationActionFlow = navigationActionMutableFlow.asSharedFlow()
 
-    private val isEyeVisibleMutableFlow: MutableStateFlow<Boolean> = MutableStateFlow(true)
+    private val isEyeVisibleMutableFlow: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isEyeVisibleFlow = isEyeVisibleMutableFlow.asStateFlow()
 
     val allTodoItemsFlow = getTodoItemsFlowUseCase.getTodoItemsFlow()
@@ -37,9 +46,9 @@ class TodoListViewModel(
         isEyeVisibleFlow,
         transform = { todoItems, isEyeVisible ->
             if (isEyeVisible) {
-                todoItems
-            } else {
                 todoItems.filter { todoItem -> !todoItem.isCompleted }
+            } else {
+                todoItems
             }
         }
     )
@@ -48,9 +57,9 @@ class TodoListViewModel(
         Log.e("ERROR", "$error")
     }
 
+
     fun onEyeClicked() {
         isEyeVisibleMutableFlow.update { !it }
-
     }
 
     fun onTodoItemClicked(todoItem: TodoItem) {
@@ -87,4 +96,6 @@ class TodoListViewModel(
             editTodoItemUseCase.editTodoItem(newItem)
         }
     }
+
+
 }

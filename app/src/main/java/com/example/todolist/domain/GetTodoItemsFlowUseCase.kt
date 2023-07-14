@@ -7,4 +7,5 @@ class GetTodoItemsFlowUseCase(private val todoItemsRepository: TodoItemsReposito
      fun getTodoItemsFlow(): Flow<List<TodoItem>> {
         return todoItemsRepository.getTodoListItem()
     }
+
 }

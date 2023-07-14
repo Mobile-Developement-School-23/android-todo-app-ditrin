@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlinx-serialization'
     id 'kotlin-parcelize'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -38,8 +39,6 @@ android {
         enabled = true
     }
 }
-
-apply plugin: 'kotlin-kapt'
 
 dependencies {
 

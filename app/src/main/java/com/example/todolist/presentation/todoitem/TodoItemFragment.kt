@@ -2,7 +2,6 @@ package com.example.todolist.presentation.todoitem
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,9 +17,9 @@ import com.example.todolist.TodoListApplication
 import com.example.todolist.databinding.FragmentTodoItemBinding
 import com.example.todolist.domain.Importance
 import com.example.todolist.domain.TodoItem
+import com.example.todolist.parseDate
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
-import java.text.DateFormat
 import java.util.*
 
 class TodoItemFragment : Fragment(R.layout.fragment_todo_item) {
@@ -66,7 +65,7 @@ class TodoItemFragment : Fragment(R.layout.fragment_todo_item) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.deadline.collect {
                 if (it != null) {
-                    binding.deadline.text = it.toDateString()
+                    binding.deadline.text = it.parseDate()
                 }
             }
         }
@@ -83,9 +82,9 @@ class TodoItemFragment : Fragment(R.layout.fragment_todo_item) {
                 viewModel.setDeadline(null)
             }
         }
+
         binding.delete.setOnClickListener {
             val item = viewModel.todoItem.value
-
             if (item != null) {
                 viewModel.deleteTodoItem(item)
             }
@@ -95,11 +94,12 @@ class TodoItemFragment : Fragment(R.layout.fragment_todo_item) {
 
     private fun launchRightMode() {
         when (val localScreenMode = screenMode) {
-                    is TodoItemScreenMode.Add -> {
+            is TodoItemScreenMode.Add -> {
                 Toast.makeText(requireContext(), "ADD", Toast.LENGTH_SHORT).show()
                 launchAddMode()
 
             }
+
             is TodoItemScreenMode.Edit -> {
                 Toast.makeText(requireContext(), "EDIT", Toast.LENGTH_SHORT).show()
                 launchEditMode(id = localScreenMode.id)
@@ -108,11 +108,9 @@ class TodoItemFragment : Fragment(R.layout.fragment_todo_item) {
     }
 
     private fun launchEditMode(id: String) {
-
         viewModel.setTodoItemId(id)
 
         binding.save.setOnClickListener {
-
             val importance = when (binding.importanceSpinner.selectedItemPosition) {
                 0 -> Importance.COMMON
                 1 -> Importance.LOW
@@ -125,17 +123,20 @@ class TodoItemFragment : Fragment(R.layout.fragment_todo_item) {
             viewModel.editTodoItem(
                 binding.textFrame.text.toString(),
                 binding.calendar.date,
-                importance,
-                Calendar.getInstance().timeInMillis
+                importance
             )
             requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+
+        binding.calendar.setOnDateChangeListener { _, year, month, dayOfMonth ->
+            viewModel.setDeadline(
+                Calendar.getInstance().also { it.set(year, month, dayOfMonth) }.timeInMillis
+            )
         }
     }
 
     private fun launchAddMode() {
-
         binding.save.setOnClickListener {
-
             val importance = when (binding.importanceSpinner.selectedItemPosition) {
                 0 -> Importance.COMMON
                 1 -> Importance.LOW
@@ -144,14 +145,18 @@ class TodoItemFragment : Fragment(R.layout.fragment_todo_item) {
                     throw RuntimeException()
                 }
             }
-
             viewModel.addTodoItem(
                 binding.textFrame.text.toString(),
-                binding.calendar.date,
                 importance,
                 Calendar.getInstance().timeInMillis
             )
             requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+
+        binding.calendar.setOnDateChangeListener() { _, year, month, dayOfMonth ->
+            viewModel.setDeadline(
+                Calendar.getInstance().also { it.set(year, month, dayOfMonth) }.timeInMillis
+            )
         }
     }
 
@@ -159,7 +164,7 @@ class TodoItemFragment : Fragment(R.layout.fragment_todo_item) {
         viewModel.setTodoItem(todoItem)
         with(binding) {
             textFrame.setText(todoItem.text)
-            viewModel.setTaskText(todoItem.text)
+            viewModel.setText(todoItem.text)
             when (todoItem.importance) {
                 Importance.COMMON -> binding.importanceSpinner.setSelection(0)
                 Importance.LOW -> binding.importanceSpinner.setSelection(1)
@@ -191,11 +196,6 @@ class TodoItemFragment : Fragment(R.layout.fragment_todo_item) {
         )
         binding.importanceSpinner.adapter = spinnerAdapter
         binding.importanceSpinner.setSelection(0)
-    }
-
-    private fun Long.toDateString(dateFormat: Int = DateFormat.MEDIUM): String {
-        val df = DateFormat.getDateInstance(dateFormat, Locale.getDefault())
-        return df.format(this)
     }
 
     companion object {

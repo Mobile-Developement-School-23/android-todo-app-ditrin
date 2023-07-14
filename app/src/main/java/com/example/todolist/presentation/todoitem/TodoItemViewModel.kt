@@ -7,8 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.todolist.domain.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.text.DateFormat
-import java.util.*
 import kotlin.random.Random
 
 class TodoItemViewModel(
@@ -65,10 +63,19 @@ class TodoItemViewModel(
         _todoItem.tryEmit(todoItem)
     }
 
-    fun addTodoItem(inputText: String?, inputDate: Long, importance: Importance, createdAt: Long) {
+    fun setText(text: String) {
+        todoText.tryEmit(text)
+        _errorInputText.tryEmit(false)
+    }
+
+    fun setDeadline(deadline: Long?) {
+        _deadline.tryEmit(deadline)
+    }
+
+    fun addTodoItem(inputText: String?, importance: Importance, createdAt: Long) {
         val id = Random.nextInt().toString()
         val text = parseName(inputText)
-        val deadline = inputDate
+        val deadline = _deadline
         val importance = importance
         val isComplete = false
         val createdAt = createdAt
@@ -76,7 +83,7 @@ class TodoItemViewModel(
         val fieldValid = validateInput(text)
         if (fieldValid) {
             val todoItem =
-                TodoItem(id, text, importance, deadline, isComplete, createdAt, modifiedAt)
+                TodoItem(id, text, importance, deadline.value, isComplete, createdAt, modifiedAt)
             viewModelScope.launch {
                 addTodoItemUseCase.addTodoItem(todoItem)
             }
@@ -84,28 +91,20 @@ class TodoItemViewModel(
         }
     }
 
-    fun setTaskText(text: String) {
-        todoText.tryEmit(text)
-        _errorInputText.tryEmit(false)
-    }
-
-    fun editTodoItem(inputText: String?, deadline: Long, importance: Importance, createdAt: Long) {
+    fun editTodoItem(inputText: String?, deadline: Long, importance: Importance) {
         val text = parseName(inputText)
-        val deadline = deadline
+        val deadline = _deadline
         val importance = importance
-        val createdAt = createdAt
-        val fieldValid = validateInput(text)
-
 
         _todoItem.value?.let {
-            val item = it.copy(
+            val todoItem = it.copy(
                 text = text,
-                deadline = deadline,
+                deadline = deadline.value,
                 importance = importance
             )
 
             viewModelScope.launch {
-                editTodoItemUseCase.editTodoItem(item)
+                editTodoItemUseCase.editTodoItem(todoItem)
             }
             closeScreen()
         }
@@ -121,22 +120,6 @@ class TodoItemViewModel(
         return inputText?.trim() ?: ""
     }
 
-    fun saveTask(inputText: String?, deadline: Long, importance: Importance, dateOfCreating: Long) {
-        viewModelScope.launch {
-            addTodoItemUseCase.addTodoItem(
-                TodoItem(
-                    Random.nextInt().toString(),
-                    inputText ?: "",
-                    importance,
-                    deadline,
-                    false,
-                    dateOfCreating,
-                    null
-                )
-            )
-        }
-    }
-
     private fun validateInput(text: String): Boolean {
         var result = true
         if (text.isEmpty()) {
@@ -150,17 +133,7 @@ class TodoItemViewModel(
         _errorInputText.value = false
     }
 
-    fun Long.toDateString(dateFormat: Int = DateFormat.MEDIUM): String {
-        val df = DateFormat.getDateInstance(dateFormat, Locale.getDefault())
-        return df.format(this)
-    }
-
     private fun closeScreen() {
         _closeScreen.value = Unit
-    }
-
-
-    fun setDeadline(deadline: Long?) {
-        _deadline.tryEmit(deadline)
     }
 }

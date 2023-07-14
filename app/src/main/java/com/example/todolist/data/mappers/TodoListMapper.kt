@@ -1,6 +1,6 @@
 package com.example.todolist.data.mappers
 
-import com.example.todolist.data.TodoItemDbModel
+import com.example.todolist.data.datasource.TodoItemDbModel
 import com.example.todolist.domain.TodoItem
 
 
