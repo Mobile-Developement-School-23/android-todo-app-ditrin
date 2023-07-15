@@ -12,4 +12,10 @@
         <item name="color">@color/label_primary</item>
         <item name="android:textStyle">bold</item>
     </style>
+    <style name="StyleOfCalendar" parent="Widget.Material3.MaterialCalendar">
+        <item name="android:focusedMonthDateColor">?attr/color_red</item>
+        <item name="android:weekNumberColor">@color/color_red</item>
+        <item name="android:weekDayTextAppearance">?attr/color_red</item>
+        <item name="android:dateTextAppearance">?attr/color_red</item>
+    </style>
 </resources>
