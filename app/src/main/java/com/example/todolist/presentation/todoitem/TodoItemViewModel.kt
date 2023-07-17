@@ -1,34 +1,29 @@
 package com.example.todolist.presentation.todoitem
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todolist.domain.*
+import com.example.todolist.presentation.compose.Action
+import com.example.todolist.presentation.compose.CloseImportanceDio
+import com.example.todolist.presentation.compose.CloseScreen
+import com.example.todolist.presentation.compose.ConsentToOffline
+import com.example.todolist.presentation.compose.DeadlineChange
+import com.example.todolist.presentation.compose.Delete
+import com.example.todolist.presentation.compose.ImportanceChange
+import com.example.todolist.presentation.compose.ImportanceClick
+import com.example.todolist.presentation.compose.SaveScreen
+import com.example.todolist.presentation.compose.TodoScreenState
+import com.example.todolist.presentation.compose.TextChange
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class TodoItemViewModel(
-    private val getTodoItemsFlowUseCase: GetTodoItemsFlowUseCase,
     private val addTodoItemUseCase: AddTodoItemUseCase,
     private val editTodoItemUseCase: EditTodoItemUseCase,
     private val deleteTodoItemUseCase: DeleteTodoItemUseCase,
     private val getTodoItemUseCase: GetTodoItemUseCase
 ) : ViewModel() {
-
-    private val itemIdMutableFlow = MutableStateFlow<String?>(null)
-
-    val todoItemFlowCombine = combine(
-        getTodoItemsFlowUseCase.getTodoItemsFlow(),
-        itemIdMutableFlow,
-        transform = { todoItems, itemId ->
-            todoItems.firstOrNull { it.id == itemId }
-        }
-    )
-
-    val todoItemFlow = getTodoItemsFlowUseCase.getTodoItemsFlow()
-        .map { it.findLast { id -> id.id == itemIdMutableFlow.value } }
 
     private val _errorInputText = MutableStateFlow(false)
     val errorInputText = _errorInputText.asStateFlow()
@@ -39,85 +34,137 @@ class TodoItemViewModel(
 
     private val _todoId = MutableStateFlow<String?>(null)
 
-    private val _closeScreen = MutableLiveData<Unit>()
-    val closeScreen: LiveData<Unit>
-        get() = _closeScreen
+    private val _closeScreen = MutableStateFlow(false)
+    val closeScreen get() = _closeScreen.asStateFlow()
 
     private val _deadline = MutableStateFlow<Long?>(null)
     val deadline get() = _deadline.asStateFlow()
 
-    private val todoText = MutableStateFlow("")
+    val state: MutableStateFlow<TodoScreenState> = MutableStateFlow(TodoScreenState())
 
-    fun onItemIdGot(id: String) {
-        itemIdMutableFlow.value = id
+    fun onAction(action: Action) {
+
+        when (action) {
+
+            is SaveScreen -> {
+                state.update {
+                    it.copy(isLoading = true)
+                }
+                if (state.value.id == "") {
+                    addTodoItem(state.value)
+                } else
+                    editTodoItem(state.value)
+            }
+
+            is TextChange -> {
+                state.update {
+                    it.copy(text = action.text, nullTextChange = false)
+                }
+            }
+
+            is DeadlineChange -> {
+                state.update {
+                    it.copy(deadline = action.deadline)
+                }
+            }
+
+            is ImportanceChange -> {
+                state.update {
+                    it.copy(importance = action.importance, isImportanceDioOpen = false)
+                }
+            }
+
+            is ConsentToOffline -> {
+                onAction(CloseScreen)
+            }
+
+            Delete -> {
+                deleteTodoItem(state.value)
+            }
+
+            ImportanceClick -> {
+                state.update {
+                    it.copy(isImportanceDioOpen = !it.isImportanceDioOpen)
+                }
+            }
+
+            CloseImportanceDio -> {
+                state.update {
+                    it.copy(isImportanceDioOpen = false)
+                }
+            }
+
+            CloseScreen ->
+                _closeScreen.tryEmit(true)
+        }
     }
 
     fun setTodoItemId(id: String) {
         _todoId.tryEmit(id)
         viewModelScope.launch {
-            _todoItem.emit(getTodoItemUseCase(id))
+            val item = getTodoItemUseCase(id)
+            if (item != null) {
+                state.update {
+                    it.copy(
+                        item.id,
+                        item.text,
+                        item.deadline,
+                        item.importance,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        item.createdAt,
+                        item.modifiedAt,
+                        false,
+                        false
+                    )
+                }
+            }
         }
     }
 
-    fun setTodoItem(todoItem: TodoItem) {
-        _todoItem.tryEmit(todoItem)
-    }
-
-    fun setText(text: String) {
-        todoText.tryEmit(text)
-        _errorInputText.tryEmit(false)
-    }
-
-    fun setDeadline(deadline: Long?) {
-        _deadline.tryEmit(deadline)
-    }
-
-    fun addTodoItem(inputText: String?, importance: Importance, createdAt: Long) {
+    fun addTodoItem(state: TodoScreenState) {
         val id = Random.nextInt().toString()
-        val text = parseName(inputText)
-        val deadline = _deadline
-        val importance = importance
-        val isComplete = false
-        val createdAt = createdAt
-        val modifiedAt = null
+        val text = state.text
+        val deadline = state.deadline
+        val importance = state.importance
+        val isComplete = state.isCompleted
+        val createdAt = state.dateOfCreating
+        val modifiedAt = state.dateOnChanged
         val fieldValid = validateInput(text)
         if (fieldValid) {
             val todoItem =
-                TodoItem(id, text, importance, deadline.value, isComplete, createdAt, modifiedAt)
+                TodoItem(id, text, importance, deadline, isComplete, createdAt, modifiedAt)
             viewModelScope.launch {
                 addTodoItemUseCase.addTodoItem(todoItem)
             }
-            closeScreen()
         }
+        onAction(CloseScreen)
     }
 
-    fun editTodoItem(inputText: String?, deadline: Long, importance: Importance) {
-        val text = parseName(inputText)
-        val deadline = _deadline
-        val importance = importance
-
-        _todoItem.value?.let {
-            val todoItem = it.copy(
-                text = text,
-                deadline = deadline.value,
-                importance = importance
-            )
-
-            viewModelScope.launch {
-                editTodoItemUseCase.editTodoItem(todoItem)
-            }
-            closeScreen()
-        }
-    }
-
-    fun deleteTodoItem(todoItem: TodoItem) {
+    fun editTodoItem(state: TodoScreenState) {
         viewModelScope.launch {
-            deleteTodoItemUseCase.deleteTodoItem(todoItem.id)
+            editTodoItemUseCase.editTodoItem(
+                TodoItem(
+                    state.id,
+                    state.text,
+                    state.importance,
+                    state.deadline,
+                    state.isCompleted,
+                    state.dateOfCreating,
+                    state.dateOnChanged
+                )
+            )
         }
+        onAction(CloseScreen)
     }
 
-    private fun parseName(inputText: String?): String {
-        return inputText?.trim() ?: ""
+    fun deleteTodoItem(state: TodoScreenState) {
+        viewModelScope.launch {
+            deleteTodoItemUseCase.deleteTodoItem(state.id)
+        }
     }
 
     private fun validateInput(text: String): Boolean {
@@ -127,13 +174,5 @@ class TodoItemViewModel(
             result = false
         }
         return result
-    }
-
-    fun resetErrorInputText() {
-        _errorInputText.value = false
-    }
-
-    private fun closeScreen() {
-        _closeScreen.value = Unit
     }
 }

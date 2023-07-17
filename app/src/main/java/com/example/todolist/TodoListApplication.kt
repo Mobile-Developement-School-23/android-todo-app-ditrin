@@ -48,7 +48,6 @@ class TodoListApplication : Application() {
 
     val todoItemViewModelFactory by lazy {
         TodoItemViewModelFactory(
-            getTodoItemsFlowUseCase = createGetTodoItemsFlowUseCase(),
             addTodoItemUseCase = createAddTodoItemUseCase(),
             editTodoItemUseCase = createEditTodoItemUseCase(),
             deleteTodoItemUseCase = createDeleteTodoItemUseCase(),

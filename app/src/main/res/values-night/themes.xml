@@ -2,12 +2,15 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.ToDoList" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
-        <item name="colorPrimaryDark">@color/back_primary</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="colorAccent">@color/color_blue</item>
         <item name="android:textColor">@color/color_gray</item>
         <item name="android:windowBackground">@color/back_primary</item>
         <item name="colorControlActivated">@color/color_blue</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="support_separator">@color/support_dark_separator</item>
+        <item name="support_overlay">@color/support_dark_overlay</item>
+        <item name="color_white">@color/color_dark_white</item>
+        <item name="back_primary">@color/back_dark_primary</item>
     </style>
 </resources>

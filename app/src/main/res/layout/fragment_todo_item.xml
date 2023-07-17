@@ -1,162 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/item_container"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/back_primary">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/task_compose_screen"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:src="@drawable/close"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.compose.ui.platform.ComposeView>
+</LinearLayout>
 
-        <EditText
-            android:id="@+id/text_frame"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/bg_secondary"
-            android:gravity="top"
-            android:hint="@string/just_do_it"
-            android:importantForAutofill="no"
-            android:inputType="textMultiLine"
-            android:minHeight="120dp"
-            android:padding="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/close" />
+    <!--<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--    xmlns:tools="http://schemas.android.com/tools"-->
+    <!--    android:id="@+id/item_container"-->
+    <!--    android:layout_width="match_parent"-->
+    <!--    android:layout_height="match_parent">-->
 
-        <TextView
-            android:id="@+id/save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:minHeight="48dp"
-            android:text="@string/save"
-            android:textAllCaps="true"
-            android:textColor="@color/color_blue"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/close"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/close" />
+    <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content">-->
 
-        <TextView
-            android:id="@+id/importance_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="28dp"
-            android:text="@string/importance"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_frame" />
+    <!--        <ImageView-->
+    <!--            android:id="@+id/close"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_margin="16dp"-->
+    <!--            android:src="@drawable/close"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
-        <Spinner
-            android:id="@+id/importance_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginStart="16dp"
-            android:minWidth="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/importance_header" />
+    <!--        <EditText-->
+    <!--            android:id="@+id/text_frame"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginHorizontal="16dp"-->
+    <!--            android:layout_marginTop="12dp"-->
+    <!--            android:background="@drawable/bg_secondary"-->
+    <!--            android:gravity="top"-->
+    <!--            android:hint="@string/just_do_it"-->
+    <!--            android:importantForAutofill="no"-->
+    <!--            android:inputType="textMultiLine"-->
+    <!--            android:minHeight="120dp"-->
+    <!--            android:padding="8dp"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toBottomOf="@id/close" />-->
 
-        <View
-            android:id="@+id/line"
-            android:layout_width="0dp"
-            android:layout_height="1sp"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
-            android:background="@color/support_separator"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/importance_spinner" />
+    <!--        <TextView-->
+    <!--            android:id="@+id/save"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginEnd="16dp"-->
+    <!--            android:clickable="true"-->
+    <!--            android:focusable="true"-->
+    <!--            android:gravity="center_vertical"-->
+    <!--            android:minHeight="48dp"-->
+    <!--            android:text="@string/save"-->
+    <!--            android:textAllCaps="true"-->
+    <!--            android:textColor="@color/color_blue"-->
+    <!--            android:textSize="16sp"-->
+    <!--            android:textStyle="bold"-->
+    <!--            app:layout_constraintBottom_toBottomOf="@id/close"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintTop_toTopOf="@id/close" />-->
 
-        <LinearLayout
-            android:id="@+id/deadline_block"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line">
+    <!--        <TextView-->
+    <!--            android:id="@+id/importance_header"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginStart="16dp"-->
+    <!--            android:layout_marginTop="28dp"-->
+    <!--            android:text="@string/importance"-->
+    <!--            android:textSize="16sp"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toBottomOf="@id/text_frame" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/do_at"
-                android:textSize="16sp" />
+    <!--        <Spinner-->
+    <!--            android:id="@+id/importance_spinner"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="48dp"-->
+    <!--            android:layout_marginStart="16dp"-->
+    <!--            android:minWidth="0dp"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toBottomOf="@id/importance_header" />-->
 
-            <TextView
-                android:id="@+id/deadline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textColor="@color/color_blue"
-                android:textSize="14sp"
-                tools:text="2 июня 2021" />
-        </LinearLayout>
+    <!--        <View-->
+    <!--            android:id="@+id/line"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="1sp"-->
+    <!--            android:layout_marginHorizontal="16dp"-->
+    <!--            android:layout_marginTop="16dp"-->
+    <!--            android:background="@color/support_separator"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toBottomOf="@id/importance_spinner" />-->
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switcher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:thumbTint="@color/color_blue"
-            app:layout_constraintBottom_toBottomOf="@+id/deadline_block"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/deadline_block" />
+    <!--        <LinearLayout-->
+    <!--            android:id="@+id/deadline_block"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginStart="16dp"-->
+    <!--            android:layout_marginTop="16dp"-->
+    <!--            android:orientation="vertical"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toBottomOf="@id/line">-->
 
-        <CalendarView
-            android:id="@+id/calendar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            app:layout_constraintTop_toBottomOf="@id/deadline_block" />
+    <!--            <TextView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="@string/do_at"-->
+    <!--                android:textSize="16sp" />-->
 
-        <View
-            android:id="@+id/line2"
-            android:layout_width="0dp"
-            android:layout_height="1sp"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
-            android:background="@color/support_separator"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/calendar" />
+    <!--            <TextView-->
+    <!--                android:id="@+id/deadline"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_marginTop="4dp"-->
+    <!--                android:textColor="@color/color_blue"-->
+    <!--                android:textSize="14sp"-->
+    <!--                tools:text="2 июня 2021" />-->
+    <!--        </LinearLayout>-->
 
-        <TextView
-            android:id="@+id/delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="22dp"
-            android:clickable="true"
-            android:drawablePadding="17dp"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:minHeight="48dp"
-            android:text="@string/delete"
-            android:textColor="@color/color_red"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:drawableLeftCompat="@drawable/delete"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line2" />
+    <!--        <androidx.appcompat.widget.SwitchCompat-->
+    <!--            android:id="@+id/switcher"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginEnd="16dp"-->
+    <!--            android:thumbTint="@color/color_blue"-->
+    <!--            app:layout_constraintBottom_toBottomOf="@+id/deadline_block"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintTop_toTopOf="@+id/deadline_block" />-->
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+    <!--        <CalendarView-->
+    <!--            android:id="@+id/calendar"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:visibility="visible"-->
+    <!--            app:layout_constraintTop_toBottomOf="@id/deadline_block" />-->
+
+    <!--        <View-->
+    <!--            android:id="@+id/line2"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="1sp"-->
+    <!--            android:layout_marginHorizontal="16dp"-->
+    <!--            android:layout_marginTop="16dp"-->
+    <!--            android:background="@color/support_separator"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toBottomOf="@id/calendar" />-->
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/delete"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginStart="20dp"-->
+    <!--            android:layout_marginTop="22dp"-->
+    <!--            android:clickable="true"-->
+    <!--            android:drawablePadding="17dp"-->
+    <!--            android:focusable="true"-->
+    <!--            android:gravity="center_vertical"-->
+    <!--            android:minHeight="48dp"-->
+    <!--            android:text="@string/delete"-->
+    <!--            android:textColor="@color/color_red"-->
+    <!--            android:textSize="16sp"-->
+    <!--            android:textStyle="bold"-->
+    <!--            app:drawableLeftCompat="@drawable/delete"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toBottomOf="@id/line2" />-->
+
+    <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+    <!--</androidx.core.widget.NestedScrollView>-->

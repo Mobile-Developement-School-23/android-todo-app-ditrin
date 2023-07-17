@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.todolist.domain.*
 
 class TodoItemViewModelFactory(
-    private val getTodoItemsFlowUseCase: GetTodoItemsFlowUseCase,
     private val addTodoItemUseCase: AddTodoItemUseCase,
     private val editTodoItemUseCase: EditTodoItemUseCase,
     private val deleteTodoItemUseCase: DeleteTodoItemUseCase,
@@ -15,7 +14,6 @@ class TodoItemViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         return TodoItemViewModel(
-            getTodoItemsFlowUseCase,
             addTodoItemUseCase,
             editTodoItemUseCase,
             deleteTodoItemUseCase,
